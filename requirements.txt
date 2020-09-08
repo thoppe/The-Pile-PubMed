@@ -1,0 +1,5 @@
+wasabi
+pandas
+tqdm
+bs4
+-e git+git://github.com/thoppe/dspipe#egg=dspipe
