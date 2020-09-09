@@ -6,7 +6,7 @@ We use the 2019 baseline. Articles without a proper PMID, title, abstract, are i
     ✔ Saved to data/PUBMED_title_abstracts_2019_baseline.jsonl
     ℹ Saved 15,518,009, filtered 4,417,955 articles that overlapped in PMC
     ℹ Uncompressed filesize 21,628,496,354
-    ℹ Uncompressed filesize  6,896,358,250
+    ℹ Compressed filesize    6,896,358,250
 
 Compressed with
 
