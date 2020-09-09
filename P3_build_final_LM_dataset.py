@@ -25,8 +25,9 @@ def compute(f0):
 
     # Concatenate
     df = df[~idx]
-    text = df.title + df.abstract
+    text = df.title.astype(str) + df.abstract.astype(str)
 
+    # Write each article to a newline
     for block in text:
         FOUT.write(block + "\n")
 
@@ -36,7 +37,9 @@ P = Pipe(source="data/baseline/parsed", input_suffix=".csv", limit=None)
 P(compute, 1)
 
 msg.good(f"Saved to {f_save}")
-msg.info(f"{n_english} English articles, ignored {n_non_english} in other languages")
+msg.info(
+    f"{n_english:,} articles in English, filtered {n_non_english:,} in other languages"
+)
 
 filesize = Path(f_save).stat().st_size
 msg.info(f"Compressed filesize {filesize:,}")
