@@ -1,10 +1,10 @@
 from pathlib import Path
 from wasabi import msg
-import pandas as pd
 from dspipe import Pipe
 from tqdm import tqdm
 import bs4
 from utils import iterate_pubmed_xml
+import jsonlines
 
 
 def compute(f0, f1):
@@ -19,7 +19,6 @@ def compute(f0, f1):
         article = {}
         article["abstract"] = soup.find("abstract")
         article["title"] = soup.article.find("articletitle")
-        article["lang"] = soup.find("language")
         article["pmid"] = soup.find("pmid")
 
         # Skip if any missing fields
@@ -35,19 +34,43 @@ def compute(f0, f1):
         for k, val in article.items():
             article[k] = " ".join(val.get_text().strip().split())
 
+        # Check if article has a PMCID to filter later
+        pmc = soup.find("articleid", idtype="pmc")
+
+        if pmc is not None:
+            article["pmc"] = pmc.get_text()
+        else:
+            article["pmc"] = None
+
+        # Check if article has language tag to filter later
+        lang = soup.find("language")
+
+        if lang is not None:
+            article["language"] = lang.get_text()
+        else:
+            article["language"] = None
+
         data.append(article)
 
-    df = pd.DataFrame(data).set_index("pmid")
-    df.to_csv(f1)
+    # Only write at the end to mark as success
+    with jsonlines.open(f1, "w") as FOUT:
+        FOUT.write_all(data)
 
-    msg.good(f"Finished {f1}, saved {len(df)} articles")
+    msg.good(f"Finished {f1}, saved {len(data)} articles")
+
+
+def safe_compute(*args):
+    try:
+        compute(*args)
+    except:
+        print(f"Failed {args}")
 
 
 P = Pipe(
     source="data/baseline/gz",
     dest="data/baseline/parsed",
     input_suffix=".gz",
-    output_suffix=".csv",
+    output_suffix=".jsonl",
     shuffle=True,
 )
 
