@@ -10,4 +10,6 @@ We use the 2019 baseline. Articles without a proper PMID, title, abstract, are i
 
 Compressed with
 
-    zstd -T16 --keep PUBMED_title_abstracts_2019_baseline.jsonl 
+    zstd -T16 --keep PUBMED_title_abstracts_2019_baseline.jsonl
+
+Data souce temporary hosted at https://drive.google.com/file/d/1k1DBISbB04KMbHGZplbMCrTdKbLxLXQi/view?usp=sharing
