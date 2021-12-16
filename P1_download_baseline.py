@@ -37,13 +37,16 @@ def download_ftp(f0, f1):
 
 
 def check_hash(f0):
-    key = f0.name
+    key = f0.stem + ".xml.gz"
 
     if key not in md5:
-        msg.fail(f"Can't find md5 hash for {key}")
+        msg.fail(f"Can't find md5 hash for {key}, suspicious and should look into!")
+        return
 
     if file_md5sum(f0) != md5[key]:
-        msg.fail(f"Checksum failed for {key}, should delete!")
+        msg.fail(f"Checksum failed {key}, should delete!")
+        print(f0)
+        return
 
 
 if __name__ == "__main__":
@@ -58,14 +61,20 @@ if __name__ == "__main__":
     F_MD5 = df[df.filename.str.endswith(".md5")].filename
 
     P = Pipe(
-        source=F_MD5, dest=f"data/{ftp_name}/md5", output_suffix=".md5", shuffle=True,
+        source=F_MD5,
+        dest=f"data/{ftp_name}/md5",
+        output_suffix=".md5",
+        shuffle=True,
     )(download_ftp, 16)
 
     # Download the files
     F_GZ = df[df.filename.str.endswith(".gz")].filename
 
     P = Pipe(
-        source=F_GZ, dest=f"data/{ftp_name}/gz", output_suffix=".gz", shuffle=True,
+        source=F_GZ,
+        dest=f"data/{ftp_name}/gz",
+        output_suffix=".gz",
+        shuffle=True,
     )(download_ftp, 2)
 
     # Read the expected hash
@@ -79,7 +88,7 @@ if __name__ == "__main__":
 
     # Check the hashes
     P = Pipe(source=f"data/{ftp_name}/gz", output_suffix=".gz", shuffle=False)(
-        check_hash
+        check_hash, -1
     )
 
     msg.good(f"Finished downloading and checking {ftp_dest}")

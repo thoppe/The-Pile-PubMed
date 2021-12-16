@@ -11,7 +11,7 @@ stats = {
     "filtered_out": 0,
 }
 
-f_save = "data/PUBMED_title_abstracts_2019_baseline.jsonl"
+f_save = "data/PUBMED_title_abstracts_2020_baseline.jsonl"
 FOUT = jsonlines.open(f_save, mode="w")
 
 meta_columns = ["pmid", "language"]

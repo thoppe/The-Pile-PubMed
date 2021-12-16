@@ -29,7 +29,7 @@ def mkdir(dest):
 
 def file_md5sum(f, chunksize=4096):
     """
-    Returns the md5sum for an input file. 
+    Returns the md5sum for an input file.
     Chunks the data so it's non-blocking.
     """
     hash_md5 = hashlib.md5()
@@ -43,7 +43,7 @@ def file_md5sum(f, chunksize=4096):
 
 def iterate_pubmed_xml(f0):
     """
-    Iterator that returns a list of lines of XML 
+    Iterator that returns a list of lines of XML
     broken up by the PubmedArticle.
     """
 
